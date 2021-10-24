@@ -1,0 +1,45 @@
+# .github/workflows/rebase-upstream.yml
+# https://stackoverflow.com/a/61574295
+---
+name: Rebase Upstream
+# yamllint disable-line rule:truthy
+on:
+  schedule:
+    # https://crontab.guru/#*/30_6-18_*_*_1-5
+    - cron: "*/30 6-18 * * 1-5"
+    # - cron: "*/5 * * * *"
+  push:
+    paths-ignore:
+      - README.md
+      - .github/workflows/rebase-upstream.yml
+jobs:
+  rebase-pull:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          token: ${{ secrets.GENERATED_TOKEN_WORKFLOW_SCOPE }}
+          fetch-depth: 0
+      - name: "Commit"
+        uses: github-actions-x/commit@v2.8
+        with:
+          push-branch: main
+          rebase: "true"
+          force-push: "true"
+      - name: "Rebase Upstream"
+        env:
+          GITHUB_REPOSITORY: ${{ github.repository  }}
+          GITHUB_REPOSITORY_OWNER: ${{ github.repository_owner }}
+        run: |
+          echo "\${GITHUB_REPOSITORY}: ${GITHUB_REPOSITORY}"
+          echo "\${GITHUB_REPOSITORY_OWNER}: ${GITHUB_REPOSITORY_OWNER}"
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          git remote add upstream \
+            https://github.com/footsiefat/zspotify.git
+          # shellcheck disable=SC2034
+          DEFAULT_BRANCH=$(git remote show upstream \
+            | grep 'HEAD branch' | cut -d' ' -f5)
+          git fetch --all --prune \
+            && git pull --rebase --prune upstream main
+          git push --force --set-upstream origin main
