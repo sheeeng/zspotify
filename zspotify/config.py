@@ -158,7 +158,7 @@ class Config:
         return cls.get(SPLIT_ALBUM_DISCS)
 
     @classmethod
-    def get_chunk_size(cls) -> int():
+    def get_chunk_size(cls) -> int:
         return cls.get(CHUNK_SIZE)
 
     @classmethod

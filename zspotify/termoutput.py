@@ -1,3 +1,4 @@
+import sys
 from enum import Enum
 from tqdm import tqdm
 
@@ -16,11 +17,17 @@ class PrintChannel(Enum):
     PROGRESS_INFO = PRINT_PROGRESS_INFO
 
 
+ERROR_CHANNEL = [PrintChannel.ERRORS, PrintChannel.API_ERRORS]
+
+
 class Printer:
     @staticmethod
     def print(channel: PrintChannel, msg: str) -> None:
         if ZSpotify.CONFIG.get(channel.value):
-            print(msg)
+            if channel in ERROR_CHANNEL:
+                print(msg, file=sys.stderr)
+            else:
+                print(msg)
 
     @staticmethod
     def print_loader(channel: PrintChannel, msg: str) -> None:
