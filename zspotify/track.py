@@ -92,9 +92,13 @@ def get_song_duration(song_id: str) -> float:
 
     return duration
 
+
 # noinspection PyBroadException
-def download_track(mode: str, track_id: str, extra_keys={}, disable_progressbar=False) -> None:
+def download_track(mode: str, track_id: str, extra_keys=None, disable_progressbar=False) -> None:
     """ Downloads raw song audio from Spotify """
+
+    if extra_keys is None:
+        extra_keys = {}
 
     prepare_download_loader = Loader(PrintChannel.PROGRESS_INFO, "Preparing download...")
     prepare_download_loader.start()
@@ -142,12 +146,15 @@ def download_track(mode: str, track_id: str, extra_keys={}, disable_progressbar=
 
             filename = os.path.join(filedir, f'{fname}_{c}{ext}')
 
-
     except Exception as e:
         Printer.print(PrintChannel.ERRORS, '###   SKIPPING SONG - FAILED TO QUERY METADATA   ###')
-        Printer.print(PrintChannel.ERRORS, 'Track_ID: ' + str(track_id) + "\n")
+        Printer.print(PrintChannel.ERRORS, 'Track_ID: ' + str(track_id))
+        for k in extra_keys:
+            Printer.print(PrintChannel.ERRORS, k + ': ' + str(extra_keys[k]))
+        Printer.print(PrintChannel.ERRORS, "\n")
         Printer.print(PrintChannel.ERRORS, str(e) + "\n")
         Printer.print(PrintChannel.ERRORS, "".join(traceback.TracebackException.from_exception(e).format()) + "\n")
+
     else:
         try:
             if not is_playable:
@@ -216,7 +223,10 @@ def download_track(mode: str, track_id: str, extra_keys={}, disable_progressbar=
                         time.sleep(ZSpotify.CONFIG.get_anti_ban_wait_time())
         except Exception as e:
             Printer.print(PrintChannel.ERRORS, '###   SKIPPING: ' + song_name + ' (GENERAL DOWNLOAD ERROR)   ###')
-            Printer.print(PrintChannel.ERRORS, 'Track_ID: ' + str(track_id) + "\n")
+            Printer.print(PrintChannel.ERRORS, 'Track_ID: ' + str(track_id))
+            for k in extra_keys:
+                Printer.print(PrintChannel.ERRORS, k + ': ' + str(extra_keys[k]))
+            Printer.print(PrintChannel.ERRORS, "\n")
             Printer.print(PrintChannel.ERRORS, str(e) + "\n")
             Printer.print(PrintChannel.ERRORS, "".join(traceback.TracebackException.from_exception(e).format()) + "\n")
             if os.path.exists(filename_temp):

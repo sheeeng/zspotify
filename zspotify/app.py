@@ -88,7 +88,12 @@ def download_from_urls(urls: list[str]) -> bool:
                 if not song[TRACK][NAME]:
                     Printer.print(PrintChannel.SKIPS, '###   SKIPPING:  SONG DOES NOT EXIST ON SPOTIFY ANYMORE   ###' + "\n")
                 else:
-                    download_track('playlist', song[TRACK][ID], extra_keys={'playlist': name, 'playlist_num': str(enum).zfill(char_num)})
+                    download_track('playlist', song[TRACK][ID], extra_keys={
+                        'song_name_playlist': song[TRACK][NAME],
+                        'playlist': name,
+                        'playlist_num': str(enum).zfill(char_num),
+                        'playlist_id': playlist_id
+                    })
                     enum += 1
         elif episode_id is not None:
             download = True
