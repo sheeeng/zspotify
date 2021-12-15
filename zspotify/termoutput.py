@@ -1,7 +1,7 @@
 from enum import Enum
 from tqdm import tqdm
 
-from config import PRINT_SPLASH, PRINT_SKIPS, PRINT_DOWNLOAD_PROGRESS, PRINT_ERRORS, PRINT_DOWNLOADS, PRINT_API_ERRORS
+from config import *
 from zspotify import ZSpotify
 
 
@@ -12,6 +12,7 @@ class PrintChannel(Enum):
     ERRORS = PRINT_ERRORS
     DOWNLOADS = PRINT_DOWNLOADS
     API_ERRORS = PRINT_API_ERRORS
+    PROGRESS_INFO = PRINT_PROGRESS_INFO
 
 
 class Printer:
@@ -19,6 +20,11 @@ class Printer:
     def print(channel: PrintChannel, msg: str) -> None:
         if ZSpotify.CONFIG.get(channel.value):
             print(msg)
+
+    @staticmethod
+    def print_loader(channel: PrintChannel, msg: str) -> None:
+        if ZSpotify.CONFIG.get(channel.value):
+            print(msg, flush=True, end="")
 
     @staticmethod
     def progress(iterable=None, desc=None, total=None, unit='it', disable=False, unit_scale=False, unit_divisor=1000):

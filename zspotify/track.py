@@ -17,7 +17,7 @@ from utils import fix_filename, set_audio_tags, set_music_thumbnail, create_down
 from zspotify import ZSpotify
 import traceback
 
-from utils import Loader
+from loader import Loader
 
 def get_saved_tracks() -> list:
     """ Returns user's saved tracks """
@@ -38,7 +38,7 @@ def get_saved_tracks() -> list:
 
 def get_song_info(song_id) -> Tuple[List[str], List[str], str, str, Any, Any, Any, Any, Any, Any, int]:
     """ Retrieves metadata for downloaded songs """
-    with Loader("Fetching track information..."):
+    with Loader(PrintChannel.PROGRESS_INFO, "Fetching track information..."):
         (raw, info) = ZSpotify.invoke_url(f'{TRACKS_URL}?ids={song_id}&market=from_token')
 
     if not TRACKS in info:
@@ -50,7 +50,7 @@ def get_song_info(song_id) -> Tuple[List[str], List[str], str, str, Any, Any, An
         for data in info[TRACKS][0][ARTISTS]:
             artists.append(data[NAME])
             # query artist genres via href, which will be the api url
-            with Loader("Fetching artist information..."):            
+            with Loader(PrintChannel.PROGRESS_INFO, "Fetching artist information..."):
                 (raw, artistInfo) = ZSpotify.invoke_url(f'{data["href"]}')
             if ZSpotify.CONFIG.get_allGenres() and len(artistInfo[GENRES]) > 0:
                 for genre in artistInfo[GENRES]:
@@ -103,7 +103,7 @@ def download_track(mode: str, track_id: str, extra_keys={}, disable_progressbar=
         (artists, genres, album_name, name, image_url, release_year, disc_number,
          track_number, scraped_song_id, is_playable, duration_ms) = get_song_info(track_id)
         
-        prepareDownloadLoader = Loader("Preparing download...");
+        prepareDownloadLoader = Loader(PrintChannel.PROGRESS_INFO, "Preparing download...");
         prepareDownloadLoader.start()
         
         song_name = fix_filename(artists[0]) + ' - ' + fix_filename(name)
@@ -251,7 +251,7 @@ def convert_audio_format(filename) -> None:
         outputs={filename: output_params}
     )
     
-    with Loader("Converting file..."):
+    with Loader(PrintChannel.PROGRESS_INFO, "Converting file..."):
         ff_m.run()
         
     if os.path.exists(temp_filename):
