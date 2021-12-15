@@ -30,6 +30,7 @@ TEMP_DOWNLOAD_DIR = 'TEMP_DOWNLOAD_DIR'
 MD_ALLGENRES = 'MD_ALLGENRES'
 MD_GENREDELIMITER = 'MD_GENREDELIMITER'
 PRINT_PROGRESS_INFO = 'PRINT_PROGRESS_INFO'
+PRINT_WARNINGS = 'PRINT_WARNINGS'
 
 CONFIG_VALUES = {
     ROOT_PATH:                  { 'default': '../ZSpotify Music/',    'type': str,  'arg': '--root-path'                  },
@@ -55,6 +56,7 @@ CONFIG_VALUES = {
     PRINT_DOWNLOADS:            { 'default': 'False',                 'type': bool, 'arg': '--print-downloads'            },
     PRINT_API_ERRORS:           { 'default': 'False',                 'type': bool, 'arg': '--print-api-errors'           },
     PRINT_PROGRESS_INFO:        { 'default': 'True',                  'type': bool, 'arg': '--print-progress-info'        },
+    PRINT_WARNINGS:             { 'default': 'True',                  'type': bool, 'arg': '--print-warnings'             },
     MD_ALLGENRES:               { 'default': 'False',                 'type': bool, 'arg': '--md-allgenres'               },
     MD_GENREDELIMITER:          { 'default': ';',                     'type': str,  'arg': '--md-genredelimiter'          },
     TEMP_DOWNLOAD_DIR:          { 'default': '',                      'type': str,  'arg': '--temp-download-dir'          }
